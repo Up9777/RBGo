@@ -1,0 +1,40 @@
+import 'package:flutter/material.dart';
+import 'package:rbgo/authScreens/getStarted.dart';
+import 'package:rbgo/authScreens/loginScreen.dart';
+import 'package:rbgo/home/Profile.dart';
+import 'package:rbgo/home/chooseRide.dart';
+import 'package:rbgo/home/confirmBooking.dart';
+import 'package:rbgo/home/help.dart';
+import 'package:rbgo/home/homePage.dart';
+import 'package:rbgo/home/rides.dart';
+
+import 'authScreens/splash.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+Future navi(context,Nextpage){
+  return Navigator.push(context, MaterialPageRoute(builder: (context)=>Nextpage));
+}
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(fontFamily: 'Poppins', color: Colors.black),
+          bodyMedium: TextStyle(fontFamily: 'Poppins', color: Colors.black),
+          displayLarge: TextStyle(fontFamily: 'Poppins', color: Colors.black),
+          displayMedium: TextStyle(fontFamily: 'Poppins', color: Colors.black),
+          // Add other text styles as needed
+        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
+        useMaterial3: true,
+      ),
+      home: SplashScreen(),
+    );
+  }
+}
