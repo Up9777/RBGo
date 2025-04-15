@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rbgo/home/activity.dart';
 import 'package:rbgo/home/help.dart';
+import 'package:rbgo/home/wallet.dart';
 import 'package:rbgo/main.dart';
 
 class Profile extends StatefulWidget {
@@ -94,61 +96,73 @@ class _ProfileState extends State<Profile> {
                           borderRadius: BorderRadius.circular(15)),
                     ),
                   ),
-                  Container(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                              height: 44,
-                              width: 44,
-                              child: Image.asset(
-                                "assets/img_11.png",
-                              )),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Payment',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
-                          )
-                        ],
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Wallet()));
+                    },
+                    child: Container(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                                height: 44,
+                                width: 44,
+                                child: Image.asset(
+                                  "assets/img_11.png",
+                                )),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Payment',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15),
+                            )
+                          ],
+                        ),
                       ),
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(15)),
                     ),
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(15)),
                   ),
-                  Container(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                              height: 35,
-                              width: 35,
-                              child: Image.asset(
-                                "assets/img_12.png",
-                              )),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Activity',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
-                          )
-                        ],
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Activity()));
+                    },
+                    child: Container(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                                height: 35,
+                                width: 35,
+                                child: Image.asset(
+                                  "assets/img_12.png",
+                                )),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Activity',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15),
+                            )
+                          ],
+                        ),
                       ),
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(15)),
                     ),
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(15)),
                   ),
                 ],
               ),

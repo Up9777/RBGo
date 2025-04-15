@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:rbgo/authScreens/getStarted.dart';
 import 'package:rbgo/authScreens/loginScreen.dart';
+import 'package:rbgo/authScreens/welcome.dart';
 import 'package:rbgo/home/Profile.dart';
+import 'package:rbgo/home/activity.dart';
 import 'package:rbgo/home/chooseRide.dart';
 import 'package:rbgo/home/confirmBooking.dart';
 import 'package:rbgo/home/help.dart';
 import 'package:rbgo/home/homePage.dart';
 import 'package:rbgo/home/rides.dart';
 
+import 'authScreens/enterPhone.dart';
+import 'authScreens/register.dart';
 import 'authScreens/splash.dart';
+import 'driverHome/driverHome.dart';
+import 'home/wallet.dart';
 
 void main() {
   runApp(const MyApp());
 }
-Future navi(context,Nextpage){
-  return Navigator.push(context, MaterialPageRoute(builder: (context)=>Nextpage));
+
+Future navi(context, Nextpage) {
+  return Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Nextpage));
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -34,7 +43,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
         useMaterial3: true,
       ),
-      home: SplashScreen(),
+      home: Getstarted(),
     );
   }
 }

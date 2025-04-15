@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart' as latLng;
 import 'package:rbgo/home/confirmBooking.dart';
 import 'package:rbgo/main.dart';
 
@@ -15,67 +17,75 @@ class _ChooserideState extends State<Chooseride> {
     return Scaffold(
       body: Column(
         children: [
-          Expanded(child: Container()),
+          Expanded(
+            child: FlutterMap(
+              options: MapOptions(
+                initialCenter: latLng.LatLng(40.7128, -74.0060), // Approximate New York coordinates
+                // zoom: 13.0,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  subdomains: ['a', 'b', 'c'],
+                ),
+              ],
+            ),
+          ),
           Container(
             child: Column(
               children: [
-                SizedBox(
-                  height: 5,
-                ),
+                SizedBox(height: 5),
                 Text(
                   '10% promo code applied',
                   style: TextStyle(color: Colors.white),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                SizedBox(height: 10),
                 Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Container(
-                      child: Center(
-                        child: ListTile(
-                          subtitle: Text(
-                            '2.23 am drop-off\nLonger wait',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
-                          ),
-                          trailing: Text(
-                            '\$68.97',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                          title: Text(
-                            'Rb Auto',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          leading: CircleAvatar(
-                            radius: 22,
-                            backgroundColor: Colors.grey,
-                            child: ClipOval(
-                              child: Container(
-                                height: 30, // Adjust the height as needed
-                                width: 30, // Adjust the width as needed
-                                child: Image.asset(
-                                  'assets/img_1.png',
-                                  fit: BoxFit.cover,
-                                ),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Container(
+                    child: Center(
+                      child: ListTile(
+                        subtitle: Text(
+                          '2.23 am drop-off\nLonger wait',
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                        trailing: Text(
+                          '\$68.97',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        title: Text(
+                          'Rb Auto',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        leading: CircleAvatar(
+                          radius: 22,
+                          backgroundColor: Colors.grey,
+                          child: ClipOval(
+                            child: Container(
+                              height: 30,
+                              width: 30,
+                              child: Image.asset(
+                                'assets/img_1.png',
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
                         ),
                       ),
-                      height: 100,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: Colors.white, // Set the border color to white
-                          width: 3, // Set the border width
-                        ),
+                    ),
+                    height: 100,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 3,
                       ),
-                    )),
-                SizedBox(
-                  height: 20,
+                    ),
+                  ),
                 ),
+                SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Row(
@@ -84,9 +94,7 @@ class _ChooserideState extends State<Chooseride> {
                         Icons.monetization_on,
                         color: Colors.white,
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
+                      SizedBox(width: 10),
                       Text(
                         'Cash',
                         style: TextStyle(color: Colors.white),
@@ -94,9 +102,7 @@ class _ChooserideState extends State<Chooseride> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: InkWell(

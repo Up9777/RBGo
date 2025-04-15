@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rbgo/authScreens/register.dart';
 import 'package:rbgo/home/Profile.dart';
 import 'package:rbgo/home/homePage.dart';
 import 'package:rbgo/main.dart';
@@ -11,6 +12,8 @@ class Loginscreen extends StatefulWidget {
 }
 
 class _LoginscreenState extends State<Loginscreen> {
+  bool isCustomer = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,83 +29,85 @@ class _LoginscreenState extends State<Loginscreen> {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(
-              height: 35,
-            ),
+            SizedBox(height: 35),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Text("Mobile No."),
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             SizedBox(
               height: 50,
               child: TextField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                        30.0), // Adjust the radius as needed
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                        color: Colors.grey), // Customize border color
+                    borderSide: BorderSide(color: Colors.grey),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                        color: Colors
-                            .black), // Customize border color when focused
+                    borderSide: BorderSide(color: Colors.black),
                   ),
-                  hintText: '+91 1234567890', // Optional hint text
+                  hintText: '+91 1234567890',
                 ),
               ),
             ),
-            SizedBox(
-              height: 25,
-            ),
+            SizedBox(height: 25),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Text("Password"),
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             SizedBox(
               height: 50,
               child: TextField(
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                        30.0), // Adjust the radius as needed
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                        color: Colors.grey), // Customize border color
+                    borderSide: BorderSide(color: Colors.grey),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                        color: Colors
-                            .black), // Customize border color when focused
+                    borderSide: BorderSide(color: Colors.black),
                   ),
-                  hintText: '******', // Optional hint text
+                  hintText: '******',
                 ),
               ),
             ),
-            SizedBox(
-              height: 25,
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Sign in as: '),
+                Switch(
+                  value: isCustomer,
+                  onChanged: (value) {
+                    setState(() {
+                      isCustomer = value;
+                    });
+                  },
+                  activeColor: Colors.black,
+                  activeTrackColor: Colors.grey,
+                  inactiveThumbColor: Colors.grey,
+                  inactiveTrackColor: Colors.grey.shade400,
+                ),
+                Text(isCustomer ? 'Customer' : 'Driver'),
+              ],
             ),
+            SizedBox(height: 10),
             InkWell(
-              onTap: (){
+              onTap: () {
                 navi(context, Homepage());
               },
               child: Container(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(),
                     Text(
@@ -112,14 +117,11 @@ class _LoginscreenState extends State<Loginscreen> {
                           fontSize: 15,
                           color: Colors.white),
                     ),
-                    Icon(
-                      Icons.arrow_right_alt_outlined,
-                      color: Colors.white,
-                    )
                   ],
                 ),
                 decoration: BoxDecoration(
-                    color: Colors.black, borderRadius: BorderRadius.circular(15)),
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(15)),
                 height: 55,
                 width: 350,
               ),
@@ -128,13 +130,9 @@ class _LoginscreenState extends State<Loginscreen> {
                 onPressed: () {},
                 child: Text(
                   'Forget password?',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
+                  style: TextStyle(color: Colors.grey),
                 )),
-            SizedBox(
-              height: 20,
-            ),
+
             Row(
               children: [
                 Expanded(child: Divider()),
@@ -145,16 +143,14 @@ class _LoginscreenState extends State<Loginscreen> {
                 Expanded(child: Divider())
               ],
             ),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
             Center(
               child: Container(
                 child: Center(
                     child: Text(
-                  'Continue with Google',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                )),
+                      'Continue with Google',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    )),
                 height: 50,
                 width: 300,
                 decoration: BoxDecoration(
@@ -163,16 +159,14 @@ class _LoginscreenState extends State<Loginscreen> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
             Center(
               child: Container(
                 child: Center(
                     child: Text(
-                  'Continue with Apple',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                )),
+                      'Continue with Apple',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    )),
                 height: 50,
                 width: 300,
                 decoration: BoxDecoration(
@@ -181,6 +175,25 @@ class _LoginscreenState extends State<Loginscreen> {
                 ),
               ),
             ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Don't have an account? "),
+                TextButton(
+                  onPressed: () {
+                    // Add navigation to signup screen here, e.g.,
+                    navi(context, SignupScreen());
+                  },
+                  child: Text(
+                    'Register',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: 20),
           ],
         ),
       ),
