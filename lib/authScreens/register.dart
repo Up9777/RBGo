@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rbgo/authScreens/welcome.dart';
-import 'package:rbgo/home/Profile.dart';
 import 'package:rbgo/home/homePage.dart';
-import 'package:rbgo/main.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -13,7 +13,94 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   bool isCustomer = true;
-  TextEditingController name = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
+
+  // Firebase instances
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Function to handle sign-up
+  Future<void> _signUp() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Create user with email and password
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      // Store additional user data in Firestore
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'name': nameController.text.trim(),
+        'mobile': mobileController.text.trim(),
+        'email': emailController.text.trim(),
+        'role': isCustomer ? 'Customer' : 'Driver',
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      // Navigate based on role
+      if (mounted) {
+        if (isCustomer) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const Homepage()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  WelcomeScreen(name: nameController.text.trim()),
+            ),
+          );
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      // Handle Firebase Auth errors
+      String errorMessage;
+      switch (e.code) {
+        case 'email-already-in-use':
+          errorMessage = 'This email is already registered.';
+          break;
+        case 'invalid-email':
+          errorMessage = 'Invalid email format.';
+          break;
+        case 'weak-password':
+          errorMessage = 'Password is too weak.';
+          break;
+        default:
+          errorMessage = 'An error occurred. Please try again.';
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An unexpected error occurred.')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    mobileController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,97 +112,103 @@ class _SignupScreenState extends State<SignupScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 80,),
-              Center(
+              const SizedBox(height: 80),
+              const Center(
                 child: Text(
                   "Create Your Account",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 35),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+              const SizedBox(height: 35),
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0),
                 child: Text("Name"),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SizedBox(
                 height: 50,
-                child: TextField(controller: name,
+                child: TextField(
+                  controller: nameController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(color: Colors.grey),
+                      borderSide: const BorderSide(color: Colors.grey),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(color: Colors.black),
+                      borderSide: const BorderSide(color: Colors.black),
                     ),
                     hintText: 'John Doe',
                   ),
                 ),
               ),
-              SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+              const SizedBox(height: 16),
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0),
                 child: Text("Mobile No."),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SizedBox(
                 height: 50,
                 child: TextField(
+                  controller: mobileController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(color: Colors.grey),
+                      borderSide: const BorderSide(color: Colors.grey),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(color: Colors.black),
+                      borderSide: const BorderSide(color: Colors.black),
                     ),
                     hintText: '+91 1234567890',
                   ),
+                  keyboardType: TextInputType.phone,
                 ),
               ),
-              SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+              const SizedBox(height: 16),
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0),
                 child: Text("Email"),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SizedBox(
                 height: 50,
                 child: TextField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(color: Colors.grey),
+                      borderSide: const BorderSide(color: Colors.grey),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(color: Colors.black),
+                      borderSide: const BorderSide(color: Colors.black),
                     ),
                     hintText: 'example@email.com',
                   ),
+                  keyboardType: TextInputType.emailAddress,
                 ),
               ),
-              SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+              const SizedBox(height: 16),
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0),
                 child: Text("Password"),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SizedBox(
                 height: 50,
                 child: TextField(
+                  controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -123,21 +216,21 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(color: Colors.grey),
+                      borderSide: const BorderSide(color: Colors.grey),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(color: Colors.black),
+                      borderSide: const BorderSide(color: Colors.black),
                     ),
                     hintText: '******',
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Sign up as: '),
+                  const Text('Sign up as: '),
                   Switch(
                     value: isCustomer,
                     onChanged: (value) {
@@ -152,76 +245,33 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   Text(isCustomer ? 'Customer' : 'Driver'),
                 ],
-              ),              SizedBox(height: 10),
+              ),
+              const SizedBox(height: 10),
               InkWell(
-                onTap: () {
-                  navi(context, WelcomeScreen(name:name.text.toString() ));
-                },
+                onTap: isLoading ? null : _signUp,
                 child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(),
-                      Text(
-                        'Sign Up',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                            color: Colors.white),
-                      ),
-                    ],
-                  ),
                   decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(15)),
+                    color: isLoading ? Colors.grey : Colors.black,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
                   height: 55,
                   width: 350,
-                ),
-              ),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(child: Divider()),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text("or"),
-                  ),
-                  Expanded(child: Divider())
-                ],
-              ),
-              SizedBox(height: 20),
-              Center(
-                child: Container(
                   child: Center(
-                      child: Text(
-                        'Continue with Google',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      )),
-                  height: 50,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                    borderRadius: BorderRadius.circular(25),
+                    child: isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
+                            'Sign Up',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              Center(
-                child: Container(
-                  child: Center(
-                      child: Text(
-                        'Continue with Apple',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      )),
-                  height: 50,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
+
 
             ],
           ),

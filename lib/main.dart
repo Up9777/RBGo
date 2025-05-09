@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rbgo/authScreens/getStarted.dart';
 import 'package:rbgo/authScreens/loginScreen.dart';
@@ -14,9 +15,14 @@ import 'authScreens/enterPhone.dart';
 import 'authScreens/register.dart';
 import 'authScreens/splash.dart';
 import 'driverHome/driverHome.dart';
+import 'firebase_options.dart';
 import 'home/wallet.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

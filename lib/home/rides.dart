@@ -3,13 +3,32 @@ import 'package:rbgo/home/chooseRide.dart';
 import 'package:rbgo/main.dart';
 
 class Rides extends StatefulWidget {
-  const Rides({super.key});
+  String type;
+  Rides({super.key, required this.type});
 
   @override
   State<Rides> createState() => _RidesState();
 }
 
 class _RidesState extends State<Rides> {
+  // List of Mumbai locations
+  final List<String> mumbaiLocations = [
+    'Bandra',
+    'Andheri',
+    'Colaba',
+    'Juhu',
+    'Powai',
+    'Malad',
+    'Versova',
+    'Dadar',
+    'Worli',
+    'Borivali'
+  ];
+
+  // Variables to store selected locations
+  String? selectedCurrentLocation;
+  String? selectedDestination;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +42,7 @@ class _RidesState extends State<Rides> {
           )
         ],
         title: Text(
-          'RB Go',
+          'Book ${widget.type}',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
         ),
       ),
@@ -33,61 +52,106 @@ class _RidesState extends State<Rides> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 30,
-              ),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "What's your current location?",
-                  fillColor: Colors.grey.shade300,
-                  filled: true,
-                  prefixIcon: Icon(
-                    Icons.location_on_outlined, // Set the desired icon here
-                    color: Colors.grey.shade700, // Adjust the color if needed
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(25), // Set the border radius here
-                    borderSide: BorderSide.none, // Make the border invisible
-                  ),
+              SizedBox(height: 30),
+              // Current Location Dropdown
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: DropdownButton<String>(
+                  value: selectedCurrentLocation,
+                  hint: Text("Select your current location"),
+                  isExpanded: true,
+                  icon: Icon(Icons.location_on_outlined,
+                      color: Colors.grey.shade700),
+                  underline: SizedBox(),
+                  items: mumbaiLocations.map((String location) {
+                    return DropdownMenuItem<String>(
+                      value: location,
+                      child: Text(location),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedCurrentLocation = newValue;
+                    });
+                  },
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Where do you want to travel ?",
-                  prefixIcon: Icon(
-                    Icons.location_on, // Set the desired icon here
-                    color: Colors.grey.shade700, // Adjust the color if needed
-                  ),
-                  fillColor: Colors.grey.shade300,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(25), // Set the border radius here
-                    borderSide: BorderSide.none, // Make the border invisible
-                  ),
+              SizedBox(height: 10),
+              // Destination Dropdown
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: DropdownButton<String>(
+                  value: selectedDestination,
+                  hint: Text("Select your destination"),
+                  isExpanded: true,
+                  icon: Icon(Icons.location_on, color: Colors.grey.shade700),
+                  underline: SizedBox(),
+                  items: mumbaiLocations.map((String location) {
+                    return DropdownMenuItem<String>(
+                      value: location,
+                      child: Text(location),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedDestination = newValue;
+                    });
+                  },
                 ),
               ),
-              SizedBox(
-                height: 20,
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  if (selectedCurrentLocation != null &&
+                      selectedDestination != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Chooseride(
+                          currentLocation: selectedCurrentLocation!,
+                          destination: selectedDestination!, type: widget.type,
+                        ),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Please select both locations')),
+                    );
+                  }
+                },
+                child: Text("Continue"),
               ),
               Divider(),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               Text(
                 'Rides Available',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
               ),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               ListTile(
-                onTap: (){
-                  navi(context, Chooseride());
+                onTap: () {
+                  if (selectedCurrentLocation != null &&
+                      selectedDestination != null) {
+                    navi(
+                      context,
+                      Chooseride(
+                        currentLocation: selectedCurrentLocation!,
+                        destination: selectedDestination!, type: widget.type,
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Please select both locations')),
+                    );
+                  }
                 },
                 leading: CircleAvatar(
                   backgroundColor: Colors.grey.shade400,
@@ -96,8 +160,8 @@ class _RidesState extends State<Rides> {
                     child: Image.asset(
                       'assets/img_8.png',
                       fit: BoxFit.cover,
-                      width: 40, // Adjust the width as needed
-                      height: 40, // Adjust the height as needed
+                      width: 40,
+                      height: 40,
                     ),
                   ),
                 ),
@@ -105,13 +169,27 @@ class _RidesState extends State<Rides> {
                   "RB Auto",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text("\$23 - 5 min away"),
+                subtitle: Text("Rs. 40 - 5 min away"),
                 trailing: Icon(Icons.arrow_right_alt),
               ),
               Divider(),
-              ListTile(onTap: (){
-                navi(context, Chooseride());
-              },
+              ListTile(
+                onTap: () {
+                  if (selectedCurrentLocation != null &&
+                      selectedDestination != null) {
+                    navi(
+                      context,
+                      Chooseride(
+                        currentLocation: selectedCurrentLocation!,
+                        destination: selectedDestination!, type: widget.type,
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Please select both locations')),
+                    );
+                  }
+                },
                 leading: CircleAvatar(
                   backgroundColor: Colors.grey.shade400,
                   radius: 25,
@@ -119,35 +197,16 @@ class _RidesState extends State<Rides> {
                     child: Image.asset(
                       'assets/img_1.png',
                       fit: BoxFit.cover,
-                      width: 40, // Adjust the width as needed
-                      height: 40, // Adjust the height as needed
+                      width: 40,
+                      height: 40,
                     ),
                   ),
                 ),
-                title: Text("4 Seater",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: Text("\$23 - 5 min away"),
-                trailing: Icon(Icons.arrow_right_alt),
-              ),
-              Divider(),
-              ListTile(onTap: (){
-                navi(context, Chooseride());
-              },
-                leading: CircleAvatar(
-                  backgroundColor: Colors.grey.shade400,
-                  radius: 25,
-                  child: ClipOval(
-                    child: Image.asset(
-                      'assets/img_9.png',
-                      fit: BoxFit.cover,
-                      width: 40, // Adjust the width as needed
-                      height: 40, // Adjust the height as needed
-                    ),
-                  ),
+                title: Text(
+                  "4 Seater",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                title: Text("6 Seater Premium",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: Text("\$23 - 5 min away"),
+                subtitle: Text("Rs. 80 - 5 min away"),
                 trailing: Icon(Icons.arrow_right_alt),
               ),
               Divider(),
