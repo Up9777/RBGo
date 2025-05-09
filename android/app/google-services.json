@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "807928394992",
+    "project_id": "rbgo-d6a81",
+    "storage_bucket": "rbgo-d6a81.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:807928394992:android:46b23b605ff57e575dbe35",
+        "android_client_info": {
+          "package_name": "com.example.rbgo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDA-d4LE1B1G_Ay0kwFjbQ9Hpno7lOCOOg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
